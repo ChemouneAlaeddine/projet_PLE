@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Projet PLE</title>
+
+    <link rel="stylesheet" href="https://npmcdn.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+    <script src="https://npmcdn.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+    <style>
+        #map
+        {
+            border: 1px solid #ddd;
+            background-color: #ddd;
+            width: 80%;
+            height: 500px
+        }
+    </style>
+</head>
+<body>
+	<h1>Une map PLE</h1>
+	<div id="map"></div>
+	<script type="application/javascript">
+	    var pngfiles = '../intro/Output.png';
+	    var leafletlayer = new L.TileLayer(pngfiles, {minZoom: 11, maxZoom: 20});
+	    var map = L.map('map', {
+	        center: [37.55, -122.32],
+	        zoom: 13
+	    });
+	    map.addLayer(leafletlayer);
+	</script>
+</body>
+</html>
