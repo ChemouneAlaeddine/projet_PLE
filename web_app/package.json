@@ -1,7 +1,6 @@
 {
   "name": "projet",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "directories": {
     "test": "test"
@@ -11,5 +10,21 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "co-webhdfs": "^0.1.1",
+    "express": "^4.16.4",
+    "leaflet-image": "^0.4.0",
+    "link": "^0.1.5",
+    "morgan": "^1.9.1",
+    "path": "^0.12.7",
+    "webhdfs": "^1.2.0",
+    "webhdfs-proxy": "^0.1.2"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  },
+  "keywords": [],
+  "description": ""
 }

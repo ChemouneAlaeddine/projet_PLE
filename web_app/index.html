@@ -19,14 +19,59 @@
 <body>
 	<h1>Une map PLE</h1>
 	<div id="map"></div>
-	<script type="application/javascript">
-	    var pngfiles = '../intro/Output.png';
-	    var leafletlayer = new L.TileLayer(pngfiles, {minZoom: 11, maxZoom: 20});
-	    var map = L.map('map', {
-	        center: [37.55, -122.32],
-	        zoom: 13
-	    });
-	    map.addLayer(leafletlayer);
-	</script>
+    <button id="myBtn">Open Modal</button>
+
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Some text in the Modal..</p>
+      </div>
+
+    </div>
+
+	<script type="text/javascript">
+                /*
+        var center = [-33.8650, 151.2094];
+        var map = L.map('map').setView(center, 5);
+        L.tileLayer(
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
+            maxZoom: 18
+          }).addTo(map);
+        L.marker(center).addTo(map);
+        var bounds = L.latLngBounds([[ 32, -130], [ 13, -100]]);    
+        L.imageOverlay('Output.png', bounds).addTo(map);
+        */
+         
+
+        var map = L.map('map', {
+          minZoom: 1,
+          maxZoom: 4,
+          center: [0, 0],
+          zoom: 1,
+          crs: L.CRS.Simple
+        });
+
+        // dimensions of the image
+        var w = 2000,
+            h = 1500,
+            url = 'hdfs://localhost:9000/data/Output.png';
+
+
+        // calculate the edges of the image, in coordinate space
+        var southWest = map.unproject([0, h], map.getMaxZoom()-1);
+        var northEast = map.unproject([w, 0], map.getMaxZoom()-1);
+        var bounds = new L.LatLngBounds(southWest, northEast);
+
+        // add the image overlay, 
+        // so that it covers the entire map
+        L.imageOverlay(url, bounds).addTo(map);
+
+        // tell leaflet that the map is exactly as big as the image
+        map.setMaxBounds(bounds);
+
+    </script>
 </body>
 </html>
