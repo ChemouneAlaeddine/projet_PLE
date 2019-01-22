@@ -10,18 +10,20 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.spark.input.PortableDataStream;
 
 public class Computing {
-    public static HgtInfos hgt2mat(FileStatus hgtFile, int lengMat) throws IOException {
+    public static HgtInfos hgt2mat(FileStatus file, int lengMat) throws IOException {
     	
-    	InputStream inputStream = new FileInputStream("/net/cremi/bfaik/bigdata_projet/projet_PLE/intro/"+hgtFile.getPath().getName());
+    	InputStream inputStream = new FileInputStream("/net/cremi/achemoune/Bureau/projet_PLE/intro/"+file);
 
 		int height[][] = new int[lengMat][lengMat];
 	
-		if(!hgtFile.isDirectory()){
+		if(!file.isDirectory()){
 			
 			byte[] buffer = new byte[2];
-			String filen = new String(hgtFile.getPath().toString());
+			String filen = new String(file.getPath().toString());
 	
 			filen = filen.substring(filen.length()-11);
 			//System.out.println(filen.substring(1, 3));

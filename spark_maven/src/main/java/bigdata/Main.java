@@ -3,7 +3,9 @@ package bigdata;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
@@ -21,7 +23,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.input.PortableDataStream;
 
 import bigdata.Computing;
 
@@ -78,22 +82,37 @@ public class Main {
 		
 		//FileSystem hdfs = FileSystem.get(new URI("hdfs://localhost:9000"), conf);
 		//Path file = new Path("hdfs://localhost:9000/achemoune/file.txt");
+	    
+	    
 		
 		RemoteIterator<LocatedFileStatus> fileStatusListIterator = FileSystem.get(sc.hadoopConfiguration()).listFiles(new Path(pathIn), true);
 		
-		while(fileStatusListIterator.hasNext()) {
+		//FileSystem fs = FileSystem.get(new Configuration());
+	    
+	    while(fileStatusListIterator.hasNext()) {
 			LocatedFileStatus fileEntry = fileStatusListIterator.next();
+			//FileStatus fil = fs.listStatus(pathIn);
 			if(!fileEntry.isDirectory() && fileEntry.getPath().getName().endsWith(".hgt")) {
 				Computing.createPng(Computing.hgt2mat(fileEntry, 1201).matrice, pathOut+fileEntry.getPath().getName().substring(0, fileEntry.getPath().getName().indexOf(".")+1)+"png");
 			}
 		}
+	    
+	    /*JavaPairRDD<String, PortableDataStream> files = sc.binaryFiles("hdfs://young:9000/user/raw_data/dem3");
+		
+		files.foreach(v1 -> {
+		    byte[] pixels = v1._2.toArray();
+		    String filename = v1._1.split("/")[v1._1.split(("/")).length-1];
+		    filename = filename.split(".")[0];
+		    HgtInfos hgtinfos = Computing.createPng(Computing.hgt2mat(v1._2, 1201).matrice, pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
+        });*/
 		
 	    return 0;
 	}
 	
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		
-		int result = run("/net/cremi/achemoune/Bureau/projet_PLE/intro","/net/cremi/achemoune/Bureau/");
+		//int result = run("hdfs://young:9000/user/raw_data/dem3","/net/cremi/achemoune/Bureau/");
+		int result = run("/net/cremi/achemoune/Bureau/projet_PLE/intro/","/net/cremi/achemoune/Bureau/");
 		System.exit(result);
 		//System.out.println("Hellooo !!");
 	    
