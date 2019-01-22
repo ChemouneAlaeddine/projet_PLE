@@ -1,11 +1,7 @@
 package bigdata;
 
-/*import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -14,12 +10,11 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;*/
+import org.apache.hadoop.util.ToolRunner;
 
 
 public class ourHBase {
@@ -64,7 +59,7 @@ public class ourHBase {
     }
 
     public static void main(String[] args) throws Exception {
-	int exitCode = ToolRunner.run(HBaseConfiguration.create(), new TPHBase.HBaseProg(), args);
+	int exitCode = ToolRunner.run(HBaseConfiguration.create(), new ourHBase.HBaseProg(), args);
 	System.exit(exitCode);
     }*/
 }

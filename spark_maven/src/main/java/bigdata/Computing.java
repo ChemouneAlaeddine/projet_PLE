@@ -1,18 +1,22 @@
 package bigdata;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
 import org.apache.hadoop.fs.FileStatus;
 
 public class Computing {
-    public static int[][] hgt2mat(FileStatus hgtFile, int lengMat) throws IOException {
+    public static HgtInfos hgt2mat(FileStatus hgtFile, int lengMat) throws IOException {
+    	
+    	InputStream inputStream = new FileInputStream("/net/cremi/bfaik/bigdata_projet/projet_PLE/intro/"+hgtFile.getPath().getName());
 
-		int srtm_ver = 1201;
-		int height[][] = new int[1201][1201];
+		int height[][] = new int[lengMat][lengMat];
 	
 		if(!hgtFile.isDirectory()){
 			
@@ -25,16 +29,21 @@ public class Computing {
 			double lat = Double.parseDouble(filen.substring(1,3));
 			double lng = Double.parseDouble(filen.substring(4,7));
 			int minh = 0;
-			int maxh = 255;
+			int maxh = 8000;
 	
 			if (filen.indexOf(0)=='S' || filen.indexOf(0)=='s') lat *= -1;
-			if (filen.indexOf(3)=='W' || filen.indexOf(3)=='w') lng *= -1;
+			if (filen.indexOf(3)=='W' || filen.indexOf(3)=='w') lng *= 1;
 	
 			int unsigned0 = 0;
 			int unsigned1 = 0;
 	
-			for (int i = 0; i<srtm_ver; ++i){
-			    for (int j = 0; j < srtm_ver; ++j) {
+			for (int i = 0; i < lengMat; ++i){
+			    for (int j = 0; j < lengMat; ++j) {
+			    	
+			    	if(inputStream.read(buffer) < 0) {
+	                    System.out.println("Error reading file!");
+	                    System.exit(-1);
+	                }
 	
 					unsigned0 = ((int)buffer[0] < 0) ? (int)buffer[0] + 256 : (int)buffer[0];
 					unsigned1 = ((int)buffer[1] < 0) ? (int)buffer[1] + 256 : (int)buffer[1];
@@ -46,12 +55,12 @@ public class Computing {
 					maxh = Math.max(maxh, height[i][j]);
 			    }
 			}
-		}else {
-		    System.out.println("Empty file !");
-		    System.exit(-1);
+			//System.out.println("fileName: "+filen+"\nlat: "+lat+"\nlng: "+lng);
+			return new HgtInfos(filen, height, lat, lng);
 		}
 		
-		return height;
+	    System.out.println("Empty file !");
+	    return null;
     }
 
     public static void createPng(int[][] matrice, String path) throws IOException {
@@ -59,18 +68,10 @@ public class Computing {
 	
 		File ff = null;
 	
-		for (int j = 0; j<matrice.length; ++j){
+		for (int j = 0; j < matrice.length; ++j){
 		    for (int i = 0; i < matrice.length; ++i) {
-				int val = matrice[j][i];
-		
-				int a = val;//(int)(Math.random()*256); //alpha
-				int r = val;//(int)(Math.random()*256); //red
-				int g = val;//(int)(Math.random()*256); //green
-				int b = val;//(int)(Math.random()*256); //blue
-		
-				int p = (a<<24) | (r<<16) | (g<<8) | b; //pixel
-		
-				img.setRGB(i, j, p);
+		    	//System.out.println(matrice[j][i]);
+				img.setRGB(i, j, getColor(matrice[j][i]));
 		    }
 		}
 	
@@ -80,5 +81,25 @@ public class Computing {
 		}catch(IOException e){
 		    System.out.println("Error: " + e);
 		}
+    }
+    
+    public static int getColor(int height) {
+    	
+    	int result = 0;
+    	
+    	if(height < 2000)
+    		result = new Color(255,255,255).getRGB();
+    	if(height < 1500)
+    		result = new Color(255,255,102).getRGB();
+    	if(height < 1000)
+    		result = new Color(153,255,51).getRGB();
+    	if(height < 500)
+    		result = new Color(0,153,0).getRGB();
+    	if(height < 250)
+    		result = new Color(0,102,0).getRGB();
+    	if(height < 100)
+    		result = new Color(0,255,255).getRGB();
+    	
+    	return result;
     }
 }
