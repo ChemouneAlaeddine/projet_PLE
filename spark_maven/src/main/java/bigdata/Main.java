@@ -36,50 +36,6 @@ import scala.Tuple2;
 
 public class Main {
 	
-	/*public static class HBaseProg extends Configured implements Tool {
-		private static final byte[] FAMILY = Bytes.toBytes("familyName");
-		private static final byte[] ROW    = Bytes.toBytes("rowName");
-		private static final byte[] TABLE_NAME = Bytes.toBytes("tableName");
-
-		public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
-		    if (admin.tableExists(table.getTableName())) {
-			admin.disableTable(table.getTableName());
-			admin.deleteTable(table.getTableName());
-		    }
-		    admin.createTable(table);
-		}
-
-		public static void createTable(Connection connect) {
-		    try {
-				final Admin admin = connect.getAdmin();
-				HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(TABLE_NAME));
-				HColumnDescriptor famLoc = new HColumnDescriptor(FAMILY);
-				//famLoc.set...
-				tableDescriptor.addFamily(famLoc);
-				createOrOverwrite(admin, tableDescriptor);
-				admin.close();
-		    } catch (Exception e) {
-				e.printStackTrace();
-				System.exit(-1);
-		    }
-		}
-
-		public int run(String[] args) throws IOException {
-		    Connection connection = ConnectionFactory.createConnection(getConf());
-		    createTable(connection);
-		    Table table = connection.getTable(TableName.valueOf(TABLE_NAME));
-		    Put put = new Put(Bytes.toBytes("keyToPut"));
-		    table.put(put);
-		    return 0;
-		}
-
-	}
-
-    public static void main(String[] args) throws Exception {
-    	int exitCode = ToolRunner.run(HBaseConfiguration.create(), new Main.HBaseProg(), args);
-		System.exit(exitCode);
-    }*/
-	
 	public static int run(String pathIn, String pathOut) throws IOException {
 	    
 		SparkConf conf = new SparkConf().setAppName("MapProject").setMaster("local[4]");
@@ -88,8 +44,6 @@ public class Main {
 		//FileSystem hdfs = FileSystem.get(new URI("hdfs://localhost:9000"), conf);
 		//Path file = new Path("hdfs://localhost:9000/achemoune/file.txt");
 	    
-	    
-		
 		//RemoteIterator<LocatedFileStatus> fileStatusListIterator = FileSystem.get(sc.hadoopConfiguration()).listFiles(new Path(pathIn), true);
 		
 		//FileSystem fs = FileSystem.get(new Configuration());
@@ -102,7 +56,7 @@ public class Main {
 			}
 		}*/
 	    
-	    JavaPairRDD<String, PortableDataStream> files = sc.binaryFiles("hdfs://young:9000/user/raw_data/dem3/N44W002.hgt");
+	    JavaPairRDD<String, PortableDataStream> files = sc.binaryFiles("hdfs://young:9000/user/raw_data/dem3/N44W001.hgt");
 	    
 		files.foreach(file -> {
 			//System.out.println(file._1+"  ==============================  "+file._2);
@@ -112,9 +66,11 @@ public class Main {
 		    //System.out.println("=======================\n"+filename+"\n=======================");
 		    HgtInfos ex = Computing.hgt2mat(data, 1201, filename);
 		    //System.out.println("=======================\n"+file.toString()+"\n=======================");
-		    System.out.println("=======================\n"+ex.lat+"\n=======================");
-		    System.out.println("=======================\n"+ex.lng+"\n=======================");
-		    Computing.createPng(Computing.hgt2mat(data, 1201, filename).matrice, pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
+		    System.out.println("=======================\n"+ex.getLat()+"\n=======================");
+		    System.out.println("=======================\n"+ex.getLng()+"\n=======================");
+		    System.out.println("=======================\n"+ex.getFileName()+"\n=======================");
+		    System.out.println("=======================\n"+ex.getMatrice().length+"\n=======================");
+		    Computing.createPng(Computing.hgt2mat(data, 1201, filename).getMatrice(), pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
         });
 		
 	    return 0;

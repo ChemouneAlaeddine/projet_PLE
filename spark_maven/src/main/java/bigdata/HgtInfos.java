@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class HgtInfos implements Serializable {
 	
-	public String fileName;
-	public int[][] matrice;
-	public double lat;
-	public double lng;
+	private String fileName;
+	private int[][] matrice;
+	private double lat;
+	private double lng;
 	
 	public HgtInfos(String fileName, int[][] matrice, double lat, double lng) {
 		this.fileName = fileName;

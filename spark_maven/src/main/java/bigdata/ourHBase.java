@@ -19,10 +19,10 @@ import org.apache.hadoop.util.ToolRunner;
 
 public class ourHBase {
 
-    /*public static class HBaseProg extends Configured implements Tool {
+    public static class HBaseProg extends Configured implements Tool {
 	private static final byte[] FAMILY = Bytes.toBytes("familyName");
 	private static final byte[] ROW    = Bytes.toBytes("rowName");
-	private static final byte[] TABLE_NAME = Bytes.toBytes("tableName");
+	private static final byte[] TABLE_NAME = Bytes.toBytes("achemoune");
 
 	public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
 	    if (admin.tableExists(table.getTableName())) {
@@ -61,5 +61,5 @@ public class ourHBase {
     public static void main(String[] args) throws Exception {
 	int exitCode = ToolRunner.run(HBaseConfiguration.create(), new ourHBase.HBaseProg(), args);
 	System.exit(exitCode);
-    }*/
+    }
 }
