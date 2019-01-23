@@ -1,6 +1,8 @@
 package bigdata;
 
-public class HgtInfos {
+import java.io.Serializable;
+
+public class HgtInfos implements Serializable {
 	
 	public String fileName;
 	public int[][] matrice;
@@ -13,6 +15,8 @@ public class HgtInfos {
 		this.lat = lat;
 		this.lng = lng;
 	}
+	
+	public HgtInfos() {}
 	
 	public String getFileName() {
 		return fileName;

@@ -2,28 +2,35 @@ package bigdata;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
 
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.spark.input.PortableDataStream;
+import org.apache.hadoop.fs.Path;
 
 public class Computing {
-    public static HgtInfos hgt2mat(FileStatus file, int lengMat) throws IOException {
+    public static HgtInfos hgt2mat(byte[] file, int lengMat, String filen) throws IOException {
     	
-    	InputStream inputStream = new FileInputStream("/net/cremi/achemoune/Bureau/projet_PLE/intro/"+file);
+    	//File file = new File(filePath.toString());
+    	//InputStream inputStream = new FileInputStream(file);
+    	InputStream inputStream = new ByteArrayInputStream(file);
+    	//FileSystem fs = null;
+    	//ObjectInputStream in = new ObjectInputStream(fs.open(filePath));
+    	
+    	
 
 		int height[][] = new int[lengMat][lengMat];
 	
-		if(!file.isDirectory()){
+		//if(!file.isDirectory()){
 			
 			byte[] buffer = new byte[2];
-			String filen = new String(file.getPath().toString());
 	
 			filen = filen.substring(filen.length()-11);
 			//System.out.println(filen.substring(1, 3));
@@ -61,9 +68,9 @@ public class Computing {
 			return new HgtInfos(filen, height, lat, lng);
 		}
 		
-	    System.out.println("Empty file !");
+	    /*System.out.println("Empty file !");
 	    return null;
-    }
+    }*/
 
     public static void createPng(int[][] matrice, String path) throws IOException {
 		BufferedImage img = new BufferedImage(matrice.length, matrice.length, BufferedImage.TYPE_INT_ARGB);
@@ -72,7 +79,6 @@ public class Computing {
 	
 		for (int j = 0; j < matrice.length; ++j){
 		    for (int i = 0; i < matrice.length; ++i) {
-		    	//System.out.println(matrice[j][i]);
 				img.setRGB(i, j, getColor(matrice[j][i]));
 		    }
 		}
