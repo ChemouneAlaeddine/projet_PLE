@@ -1,5 +1,6 @@
 package bigdata;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Iterator;
@@ -39,11 +40,15 @@ import scala.Tuple2;
 
 public class Main {
 	
-	public static int run(String pathIn, String pathOut) throws IOException {
+	public static int run(String pathIn, String pathOut) throws Exception {
 	    
 		SparkConf conf = new SparkConf().setAppName("MapProject").setMaster("local[4]");
 	    JavaSparkContext sc = new JavaSparkContext(conf);
 		
+	    ourHBase.HBaseProg hb = new ourHBase.HBaseProg();
+	    
+	    ToolRunner.run(HBaseConfiguration.create(), hb, null);
+	    
 		//FileSystem hdfs = FileSystem.get(new URI("hdfs://localhost:9000"), conf);
 		//Path file = new Path("hdfs://localhost:9000/achemoune/file.txt");
 	    
@@ -59,7 +64,9 @@ public class Main {
 			}
 		}*/
 	    
-	    JavaPairRDD<String, PortableDataStream> files = sc.binaryFiles("hdfs://young:9000/user/raw_data/dem3/N44W001.hgt");
+	    
+	    
+	    JavaPairRDD<String, PortableDataStream> files = sc.binaryFiles("hdfs://ripoux:9000/user/raw_data/dem3/N44W001.hgt");
 	    
 		files.foreach(file -> {
 			//System.out.println(file._1+"  ==============================  "+file._2);
@@ -69,20 +76,25 @@ public class Main {
 		    //System.out.println("=======================\n"+filename+"\n=======================");
 		    HgtInfos ex = Computing.hgt2mat(data, 1201, filename);
 		    //System.out.println("=======================\n"+file.toString()+"\n=======================");
-		    System.out.println("=======================\n"+ex.getLat()+"\n=======================");
+		    /*System.out.println("=======================\n"+ex.getLat()+"\n=======================");
 		    System.out.println("=======================\n"+ex.getLng()+"\n=======================");
-		    System.out.println("=======================\n"+ex.getFileName()+"\n=======================");
-		    System.out.println("=======================\n"+ex.getMatrice().length+"\n=======================");
-		    byte[] bt = Computing.createPng(Computing.hgt2mat(data, 1201, filename).getMatrice(), pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
-		    String[] str = {filename, Double.toString(ex.getLat()), Double.toString(ex.getLng())};
-		    int exitCode = ToolRunner.run(HBaseConfiguration.create(), new ourHBase.HBaseProg(), str);
-		    System.out.print("result: "+exitCode);
+		    System.out.println("=======================\n"+ex.getFileName()+"\n=======================");*/
+		    
+		    BufferedImage bt = Computing.createPng(Computing.hgt2mat(data, 1201, filename).getMatrice(), pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
+		    
+		    
+		    ourHBase.HBaseProg.addRow(ex.getFileName(), ex.getLat(), ex.getLng(), bt);
+		    //String[] str = {filename, Double.toString(ex.getLat()), Double.toString(ex.getLng()), file._2.toString()};
+		    
+		    
+
+		    
         });
 		
 	    return 0;
 	}
 	
-	public static void main(String[] args) throws IOException, URISyntaxException {
+	public static void main(String[] args) throws Exception {
 		
 		//int result = run("hdfs://young:9000/user/raw_data/dem3","/net/cremi/achemoune/Bureau/");
 		int result = run("/net/cremi/achemoune/Bureau/projet_PLE/intro","/net/cremi/achemoune/Bureau/");

@@ -73,7 +73,7 @@ public class Computing {
 	    return null;
     }*/
 
-    public static byte[] createPng(int[][] matrice, String path) throws IOException {
+    public static BufferedImage createPng(int[][] matrice, String path) throws IOException {
 		BufferedImage img = new BufferedImage(matrice.length, matrice.length, BufferedImage.TYPE_INT_ARGB);
 	
 		File ff = null;
@@ -96,7 +96,11 @@ public class Computing {
 	    baos.flush();
 	    byte[] imageInByte = baos.toByteArray();
 	    baos.close();
-	    return imageInByte;
+	    
+	    
+	    //ourHBase.HBaseProg.addRow(ex.getFileName(), ex.getLat(), ex.getLng(), bt);
+	    
+	    return img;
     }
     
     public static int getColor(int height) {
