@@ -1,1 +1,1 @@
-spark-submit --class bigdata.Main --deploy-mode client --master "local[4]" --supervise --executor-memory 512M --executor-cores 2 --num-executors 4 /net/cremi/achemoune/Bureau/projet_PLE/spark_maven/target/Main-0.0.1.jar
+spark-submit --class bigdata.Main --deploy-mode client --master "local[4]" --supervise --executor-memory 512M --executor-cores 2 --num-executors 4 /net/cremi/achemoune/Bureau/test_hb/projet_PLE/spark_maven/target/Main-0.0.1.jar

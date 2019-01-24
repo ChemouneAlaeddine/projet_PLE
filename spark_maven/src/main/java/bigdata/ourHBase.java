@@ -21,8 +21,10 @@ public class ourHBase {
 
     public static class HBaseProg extends Configured implements Tool {
 	private static final byte[] FAMILY = Bytes.toBytes("familyName");
-	private static final byte[] ROW    = Bytes.toBytes("rowName");
 	private static final byte[] TABLE_NAME = Bytes.toBytes("achemoune");
+	private static final byte[] LAT    = Bytes.toBytes("lat");
+	private static final byte[] LNG    = Bytes.toBytes("lng");
+	private static final byte[] FILE_NAME    = Bytes.toBytes("file_name");
 
 	public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
 	    if (admin.tableExists(table.getTableName())) {
@@ -47,19 +49,29 @@ public class ourHBase {
 	    }
 	}
 
+	@Override
 	public int run(String[] args) throws IOException {
 	    Connection connection = ConnectionFactory.createConnection(getConf());
 	    createTable(connection);
 	    Table table = connection.getTable(TableName.valueOf(TABLE_NAME));
-	    Put put = new Put(Bytes.toBytes("keyToPut"));
+	    
+	    Put put = new Put(Bytes.toBytes(args[2]));
+	    
+	    put.addColumn(FAMILY, FILE_NAME, Bytes.toBytes(args[0]));
+	    put.addColumn(FAMILY, LAT, Bytes.toBytes(args[1]));
+	    put.addColumn(FAMILY, LNG, Bytes.toBytes(args[2]));
+	    
 	    table.put(put);
+	    table.close();
+	    connection.close();
+	    
 	    return 0;
 	}
 
     }
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
 	int exitCode = ToolRunner.run(HBaseConfiguration.create(), new ourHBase.HBaseProg(), args);
 	System.exit(exitCode);
-    }
+    }*/
 }

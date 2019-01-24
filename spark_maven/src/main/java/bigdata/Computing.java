@@ -3,6 +3,7 @@ package bigdata;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,7 +73,7 @@ public class Computing {
 	    return null;
     }*/
 
-    public static void createPng(int[][] matrice, String path) throws IOException {
+    public static byte[] createPng(int[][] matrice, String path) throws IOException {
 		BufferedImage img = new BufferedImage(matrice.length, matrice.length, BufferedImage.TYPE_INT_ARGB);
 	
 		File ff = null;
@@ -89,6 +90,13 @@ public class Computing {
 		}catch(IOException e){
 		    System.out.println("Error: " + e);
 		}
+		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    ImageIO.write( img, "jpg", baos );
+	    baos.flush();
+	    byte[] imageInByte = baos.toByteArray();
+	    baos.close();
+	    return imageInByte;
     }
     
     public static int getColor(int height) {

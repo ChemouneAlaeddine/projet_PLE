@@ -30,6 +30,9 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.input.PortableDataStream;
 
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.util.ToolRunner;
+
 import scala.Tuple2;
 
 //import bigdata.Computing;
@@ -70,7 +73,10 @@ public class Main {
 		    System.out.println("=======================\n"+ex.getLng()+"\n=======================");
 		    System.out.println("=======================\n"+ex.getFileName()+"\n=======================");
 		    System.out.println("=======================\n"+ex.getMatrice().length+"\n=======================");
-		    Computing.createPng(Computing.hgt2mat(data, 1201, filename).getMatrice(), pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
+		    byte[] bt = Computing.createPng(Computing.hgt2mat(data, 1201, filename).getMatrice(), pathOut+filename.substring(0, filename.indexOf(".")+1)+"png");
+		    String[] str = {filename, Double.toString(ex.getLat()), Double.toString(ex.getLng())};
+		    int exitCode = ToolRunner.run(HBaseConfiguration.create(), new ourHBase.HBaseProg(), str);
+		    System.out.print("result: "+exitCode);
         });
 		
 	    return 0;
