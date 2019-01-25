@@ -62,8 +62,7 @@ public class ourHBase {
 	public static void addRow(String fileName, double lat, double lng, byte[] img) {
 		
 		Put put = new Put(Bytes.toBytes(fileName));
-		    
-	    put.addColumn(FAMILY, FILE_NAME, Bytes.toBytes(fileName));
+		
 	    put.addColumn(FAMILY, LAT, Bytes.toBytes(lat));
 	    put.addColumn(FAMILY, LNG, Bytes.toBytes(lng));
 	    
