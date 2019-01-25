@@ -12,6 +12,9 @@
   "dependencies": {
     "ejs-locals": "^1.0.2",
     "express": "^4.16.4",
+    "hbase": "^0.4.2",
+    "hbase-client": "^1.6.1",
+    "hbase-rpc-client": "^0.1.15",
     "leaflet": "^1.4.0",
     "path": "^0.12.7"
   }
