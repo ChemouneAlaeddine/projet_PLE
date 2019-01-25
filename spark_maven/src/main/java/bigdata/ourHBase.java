@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -58,7 +59,7 @@ public class ourHBase {
 	    }
 	}
 	
-	public static void addRow(String fileName, double lat, double lng, BufferedImage img) {
+	public static void addRow(String fileName, double lat, double lng, byte[] img) {
 		
 		Put put = new Put(Bytes.toBytes(fileName));
 		    
@@ -67,12 +68,12 @@ public class ourHBase {
 	    put.addColumn(FAMILY, LNG, Bytes.toBytes(lng));
 	    
 	    try {
-		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		/*ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		    ImageIO.write( img, "png", baos);
 		    baos.flush();
-		    byte[] imageInByte = baos.toByteArray();
+		    byte[] imageInByte = baos.toByteArray();*/
 		    
-		    put.addColumn(FAMILY, DATA, imageInByte);
+		put.addColumn(FAMILY, DATA, img);
 		    
 		    table.put(put);
 		    
@@ -86,28 +87,8 @@ public class ourHBase {
 	public int run(String[] args) throws IOException {
 	    Connection connection = ConnectionFactory.createConnection(getConf());
 	    createTable(connection);
-	    table = connection.getTable(TableName.valueOf(TABLE_NAME));
-	    
-//	    Put put = new Put(Bytes.toBytes(args[3]));
-//	    
-//	    put.addColumn(FAMILY, FILE_NAME, Bytes.toBytes(args[0]));
-//	    put.addColumn(FAMILY, LAT, Bytes.toBytes(args[1]));
-//	    put.addColumn(FAMILY, LNG, Bytes.toBytes(args[2]));
-//	    byte[] bt = Computing.createPng(Computing.hgt2mat(args[3], 1201, args[0]).getMatrice(), args[0].substring(0, args[0].indexOf(".")+1)+"png");
-//	    //byte[] data = args[3].getBytes();
-//	    put.addColumn(FAMILY, DATA, bt);
-	    
-	    /*table.put(put);
-	    table.close();
-	    connection.close();*/
-	    
+	    table = connection.getTable(TableName.valueOf(TABLE_NAME));   
 	    return 0;
 	}
-
     }
-
-    /*public static void main(String[] args) throws Exception {
-	int exitCode = ToolRunner.run(HBaseConfiguration.create(), new ourHBase.HBaseProg(), args);
-	System.exit(exitCode);
-    }*/
 }
