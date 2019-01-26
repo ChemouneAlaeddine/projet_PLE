@@ -46,17 +46,20 @@ app.get('/canvas', function (req, result) {
   let rowkey = "X" + x + "Y" + y;
   console.log('après envoi : ' + rowkey);*/
   
-  const data = client.getScanner('achemoune_bfaik');
+  const data = client.getScanner('hello');
   var s = data.toArray((err, res) => {
     //console.log(json);
 
     let length = 1201;
-    let arraySize = length * length * 4;
+    let arraySize = length * length /** 4*/;
     let imgData = createImageData(new Uint8ClampedArray(arraySize), length);
+    //let imgData1 = createImageData(new Uint8ClampedArray(arraySize), length);
+    let canvas = new Canvas(1201, 1201);
+    let ctx = canvas.getContext('2d');
     console.log(imgData.data.length);
     if (err !== null) {
       let i;
-      for (i = 0; i < imgData.data.length; i+=4) {
+      for (i = 0; i < imgData.data.length; i+=4/*i+=4*/) {
         imgData.data[i] = 200;
         imgData.data[i+1] = 255;
         imgData.data[i+2] = 255;
@@ -64,9 +67,17 @@ app.get('/canvas', function (req, result) {
       }
 
     } else {
-      let str = JSON.stringify(res[0].columns[0].value);
-      var heightValues = str.split('[')[1].split(']')[0].split(',');
+      console.log(res[0].columns[1].value);
+      for(let i=0; i<2;i++){
+        //console.log("iterati------"+i);
+      let str = JSON.stringify(res[i].columns[0].value);
       
+      var heightValues = str.split('[')[1].split(']')[0].split(',');
+      let coord = JSON.stringify(res[i].columns[1].value);
+      console.log(coord[0]);
+      var x = str.split('[')[1].split(']')[0].split(',')[0];
+      var y = str.split('[')[1].split(']')[0].split(',')[1];
+      //console.log(x+"---"+y);
       for(let i=0; i < heightValues.length; i+=4){
         
         let cl = getColor(heightValues[i]);
@@ -75,11 +86,26 @@ app.get('/canvas', function (req, result) {
         imgData.data[i+1] = cl.g;
         imgData.data[i+2] = cl.b;
         imgData.data[i+3] = cl.a;
+        
       }
+      ctx.putImageData(imgData, i*300, 0);
+      }
+     /* let str1 = JSON.stringify(res[1].columns[0].value);
+      var heightValues1 = str1.split('[')[1].split(']')[0].split(',');
+      
+      for(let i=0; i < heightValues1.length; i+=4){
+        
+        let cl = getColor(heightValues1[i]);
+
+        imgData1.data[i] = cl.r;
+        imgData1.data[i+1] = cl.g;
+        imgData1.data[i+2] = cl.b;
+        imgData1.data[i+3] = cl.a;
+      }*/
     }
-    let canvas = new Canvas(1201, 1201);
-    let ctx = canvas.getContext('2d');
-    ctx.putImageData(imgData, 0, 0);
+
+    //ctx.putImageData(imgData, 0, 0);
+    //ctx.putImageData(imgData1, 300, 0);
     result.setHeader('Content-Type', 'image/png');
     canvas.pngStream().pipe(result);
   });
@@ -91,7 +117,7 @@ app.get('/canvas', function (req, result) {
 
 
 
-app.listen(4371);
+app.listen(4374);
 
 console.log("Running at Port 4371");
 
