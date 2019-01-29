@@ -2,8 +2,9 @@ package bigdata;
 
 import java.io.IOException;
 
-
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
@@ -19,19 +20,21 @@ import org.apache.hadoop.util.Tool;
 public class ourHBase {
 
     public static class HBaseProg extends Configured implements Tool {
-    private static final byte[] TABLE_NAME = Bytes.toBytes("ourdb2");
+    private static final byte[] TABLE_NAME = Bytes.toBytes("ourdb");
 	private static final byte[] FAMILY = Bytes.toBytes("familyName");
 	
-	private static final byte[] LATLONG    = Bytes.toBytes("latlong");
+	private static final byte[] Y_X    = Bytes.toBytes("y_x");
 	private static final byte[] DATA    = Bytes.toBytes("data");
 	
-	private static Table table;
+	private static Connection connection = null;
+	
+	private static Table table = null;
 	
 
-	public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
+	/*public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
 	    if (admin.tableExists(table.getTableName())) {
-		admin.disableTable(table.getTableName());
-		admin.deleteTable(table.getTableName());
+			admin.disableTable(table.getTableName());
+			admin.deleteTable(table.getTableName());
 	    }
 	    admin.createTable(table);
 	}
@@ -44,30 +47,36 @@ public class ourHBase {
 		//famLoc.set...
 		tableDescriptor.addFamily(famLoc);
 		createOrOverwrite(admin, tableDescriptor);
-		admin.close();
-	    } catch (Exception e) {
-		e.printStackTrace();
-		System.exit(-1);
-	    }
+		//admin.close();
+	    } catch (Exception e) {}
+	}*/
+	
+	
+	public static Table getTable() throws IOException {
+		if(table == null) {
+			table = getConnection().getTable(TableName.valueOf(TABLE_NAME));
+		}
+		return table;
 	}
 	
-	public static void addRow(String fileName, int lat, int lng, byte[] img) {
+	
+	public static Connection getConnection () throws IOException{
+		if(connection == null) {
+			Configuration hbconf = HBaseConfiguration.create();
+			connection = ConnectionFactory.createConnection(hbconf);
+		}
+		return connection;
+	}
+	
+	public void addRow(String fileName, int y, int x, byte[] img) throws IOException {
 		
 		Put put = new Put(Bytes.toBytes(fileName));
 		
-		byte[] ltlg = {(byte)lat,(byte)lng};
+		byte[] y_x = {(byte)y,(byte)x};
 		
-	    put.addColumn(FAMILY, LATLONG, ltlg);
+	    put.addColumn(FAMILY, Y_X, y_x);
 	    put.addColumn(FAMILY, DATA, img);
-	    
-	    try {
-	    	
-	    	table.put(put);
-	    
-	    }catch(IOException e) {
-	    	e.printStackTrace();
-	    	System.exit(-1);
-	    }
+	    getTable().put(put);
 	    
 	    /*try {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -87,9 +96,8 @@ public class ourHBase {
 
 	@Override
 	public int run(String[] args) throws IOException {
-	    Connection connection = ConnectionFactory.createConnection(getConf());
-	    createTable(connection);
-	    table = connection.getTable(TableName.valueOf(TABLE_NAME));   
+	    //createTable(getConnection());
+	    //table = getTable();
 	    return 0;
 	}
     }

@@ -39,8 +39,9 @@ public class Computing {
 			    for (int j = 0; j < SIZE; ++j) {
 			    	
 			    	if(inputStream.read(buffer) < 0) {
-	                    System.out.println("Error reading file!");
+	                    //System.out.println("Error reading file!");
 	                    //System.exit(-1);
+	                    heights[(i*SIZE)+j] = 0;
 	                    continue;
 	                }
 	
@@ -54,10 +55,12 @@ public class Computing {
 					maxh = Math.max(maxh, heights[(i*SIZE)+j]);
 			    }
 			}
-			return new HgtInfos(filen, heights, lat, lng);
+			int x = lng + 180;
+			int y = 90 - lat;
+			return new HgtInfos(filen, heights, y, x);
 		}
 
-    public static BufferedImage createPng(byte[] list, String fileName) throws IOException {
+    public static byte[] createPng(byte[] list, String fileName) throws IOException {
 
 	BufferedImage img = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         
@@ -69,12 +72,11 @@ public class Computing {
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    ImageIO.write(img, "png", baos);
-	    ImageIO.write(img, "png", new File("/net/cremi/achemoune/Bureau/projet_PLE/PLE_server/"+fileName));
 	    baos.flush();
 	    byte[] imageInByte = baos.toByteArray();
 	    baos.close();
 	    
-	    return img;
+	    return imageInByte;
     }
     
     public static int getColor(int height) {

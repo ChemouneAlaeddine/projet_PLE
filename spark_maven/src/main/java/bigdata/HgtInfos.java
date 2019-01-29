@@ -10,14 +10,14 @@ public class HgtInfos implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String fileName;
 	private byte[] heights;
-	private int lat;
-	private int lng;
+	private int y;
+	private int x;
 	
-	public HgtInfos(String fileName, byte[] heights, int lat, int lng) {
+	public HgtInfos(String fileName, byte[] heights, int y, int x) {
 		this.fileName = fileName;
 		this.heights = heights;
-		this.lat = lat;
-		this.lng = lng;
+		this.y = y;
+		this.x = x;
 	}
 	
 	public HgtInfos() {}
@@ -34,16 +34,16 @@ public class HgtInfos implements Serializable {
 	public void setHeights(byte[] heights) {
 		this.heights = heights;
 	}
-	public int getLat() {
-		return lat;
+	public int getY() {
+		return y;
 	}
-	public int getLng() {
-		return lng;
+	public int getX() {
+		return x;
 	}
-	public void setLat(int lat) {
-		this.lat = lat;
+	public void setY(int y) {
+		this.y = y;
 	}
-	public void setLng(int lng) {
-		this.lng = lng;
+	public void setX(int x) {
+		this.x = x;
 	}
 }
