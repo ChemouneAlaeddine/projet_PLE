@@ -1,14 +1,9 @@
 package bigdata;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import java.util.ArrayList;
 
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
 import org.apache.hadoop.hbase.TableName;
@@ -19,18 +14,15 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 
 
 public class ourHBase {
 
     public static class HBaseProg extends Configured implements Tool {
-    private static final byte[] TABLE_NAME = Bytes.toBytes("achemoune_bfaik");
+    private static final byte[] TABLE_NAME = Bytes.toBytes("ourdb2");
 	private static final byte[] FAMILY = Bytes.toBytes("familyName");
 	
-	private static final byte[] FILE_NAME    = Bytes.toBytes("file_name");
-	private static final byte[] LAT    = Bytes.toBytes("lat");
-	private static final byte[] LNG    = Bytes.toBytes("lng");
+	private static final byte[] LATLONG    = Bytes.toBytes("latlong");
 	private static final byte[] DATA    = Bytes.toBytes("data");
 	
 	private static Table table;
@@ -59,18 +51,29 @@ public class ourHBase {
 	    }
 	}
 	
-	public static void addRow(String fileName, double lat, double lng, byte[] img) {
+	public static void addRow(String fileName, int lat, int lng, byte[] img) {
 		
 		Put put = new Put(Bytes.toBytes(fileName));
 		
-	    put.addColumn(FAMILY, LAT, Bytes.toBytes(lat));
-	    put.addColumn(FAMILY, LNG, Bytes.toBytes(lng));
+		byte[] ltlg = {(byte)lat,(byte)lng};
+		
+	    put.addColumn(FAMILY, LATLONG, ltlg);
+	    put.addColumn(FAMILY, DATA, img);
 	    
 	    try {
-		/*ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	    	
+	    	table.put(put);
+	    
+	    }catch(IOException e) {
+	    	e.printStackTrace();
+	    	System.exit(-1);
+	    }
+	    
+	    /*try {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		    ImageIO.write( img, "png", baos);
 		    baos.flush();
-		    byte[] imageInByte = baos.toByteArray();*/
+		    byte[] imageInByte = baos.toByteArray();
 		    
 		put.addColumn(FAMILY, DATA, img);
 		    
@@ -79,7 +82,7 @@ public class ourHBase {
 	    }catch(IOException e) {
 	    	e.printStackTrace();
 	    	System.exit(-1);
-	    }
+	    }*/
 	}
 
 	@Override

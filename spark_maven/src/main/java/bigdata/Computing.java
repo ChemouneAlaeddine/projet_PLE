@@ -5,18 +5,11 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 
 public class Computing {
 
@@ -26,17 +19,14 @@ public class Computing {
     public static HgtInfos hgt2data(byte[] file, String filen) throws IOException {
         
     	InputStream inputStream = new ByteArrayInputStream(file);
-
-	int height[][] = new int[SIZE][SIZE];
 		
 			byte[] buffer = new byte[2];
 	
 			filen = filen.substring(filen.length()-11);
-			double lat = Double.parseDouble(filen.substring(1,3));
-			double lng = Double.parseDouble(filen.substring(4,7));
+			int lat = Integer.parseInt(filen.substring(1,3));
+			int lng = Integer.parseInt(filen.substring(4,7));
 			int minh = 0;
 			int maxh = MAX_HEIGHT;
-			//ArrayList<Integer> heights = new ArrayList<Integer>();
 			byte[] heights = new byte[SIZE*SIZE];
 	
 			if (filen.indexOf(0)=='S' || filen.indexOf(0)=='s') lat *= -1;
@@ -50,24 +40,24 @@ public class Computing {
 			    	
 			    	if(inputStream.read(buffer) < 0) {
 	                    System.out.println("Error reading file!");
-	                    System.exit(-1);
+	                    //System.exit(-1);
+	                    continue;
 	                }
 	
 					unsigned0 = ((int)buffer[0] < 0) ? (int)buffer[0] + 256 : (int)buffer[0];
 					unsigned1 = ((int)buffer[1] < 0) ? (int)buffer[1] + 256 : (int)buffer[1];
-					height[i][j] = (unsigned0 << 8) | unsigned1;
+					heights[(i*SIZE)+j] = (byte)((unsigned0 << 8) | unsigned1);
 		
-					if (height[i][j] > maxh)
-					    height[i][j] = maxh;
-					minh = Math.min(minh, height[i][j]);
-					maxh = Math.max(maxh, height[i][j]);
-					heights[(i*SIZE)+j] = (byte)height[i][j];
+					if (heights[(i*SIZE)+j] > (byte)maxh)
+						heights[(i*SIZE)+j] = (byte)maxh;
+					minh = Math.min(minh, heights[(i*SIZE)+j]);
+					maxh = Math.max(maxh, heights[(i*SIZE)+j]);
 			    }
 			}
 			return new HgtInfos(filen, heights, lat, lng);
 		}
 
-    public static BufferedImage createPng(byte[] list) throws IOException {
+    public static BufferedImage createPng(byte[] list, String fileName) throws IOException {
 
 	BufferedImage img = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         
@@ -79,6 +69,7 @@ public class Computing {
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    ImageIO.write(img, "png", baos);
+	    ImageIO.write(img, "png", new File("/net/cremi/achemoune/Bureau/projet_PLE/PLE_server/"+fileName));
 	    baos.flush();
 	    byte[] imageInByte = baos.toByteArray();
 	    baos.close();

@@ -1,7 +1,6 @@
 package bigdata;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class HgtInfos implements Serializable {
 	
@@ -11,10 +10,10 @@ public class HgtInfos implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String fileName;
 	private byte[] heights;
-	private double lat;
-	private double lng;
+	private int lat;
+	private int lng;
 	
-	public HgtInfos(String fileName, byte[] heights, double lat, double lng) {
+	public HgtInfos(String fileName, byte[] heights, int lat, int lng) {
 		this.fileName = fileName;
 		this.heights = heights;
 		this.lat = lat;
@@ -32,19 +31,19 @@ public class HgtInfos implements Serializable {
 	public byte[] getHeights() {
 		return heights;
 	}
-	public void setHeights(byte[] matrice) {
+	public void setHeights(byte[] heights) {
 		this.heights = heights;
 	}
-	public double getLat() {
+	public int getLat() {
 		return lat;
 	}
-	public double getLng() {
+	public int getLng() {
 		return lng;
 	}
-	public void setLat(double lat) {
+	public void setLat(int lat) {
 		this.lat = lat;
 	}
-	public void setLng(double lng) {
+	public void setLng(int lng) {
 		this.lng = lng;
 	}
 }
