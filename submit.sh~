@@ -1,0 +1,1 @@
+spark-submit --class bigdata.Main --deploy-mode cluster --master yarn --supervise --executor-memory 6G --executor-cores 4 --num-executors 40 /net/cremi/achemoune/Bureau/projet_PLE/spark_maven/target/Main-0.0.1.jar

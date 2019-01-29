@@ -21,7 +21,7 @@ public class ourHBase {
 
     public static class HBaseProg extends Configured implements Tool {
     private static final byte[] TABLE_NAME = Bytes.toBytes("ourdb");
-	private static final byte[] FAMILY = Bytes.toBytes("familyName");
+    private static final byte[] FAMILY = Bytes.toBytes("familyName");
 	
 	private static final byte[] Y_X    = Bytes.toBytes("y_x");
 	private static final byte[] DATA    = Bytes.toBytes("data");
@@ -31,25 +31,28 @@ public class ourHBase {
 	private static Table table = null;
 	
 
-	/*public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
+	public static void createOrOverwrite(Admin admin, HTableDescriptor table) throws IOException {
 	    if (admin.tableExists(table.getTableName())) {
 			admin.disableTable(table.getTableName());
 			admin.deleteTable(table.getTableName());
 	    }
 	    admin.createTable(table);
 	}
-
+	
 	public static void createTable(Connection connect) {
-	    try {
-		final Admin admin = connect.getAdmin();
-		HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(TABLE_NAME));
-		HColumnDescriptor famLoc = new HColumnDescriptor(FAMILY);
-		//famLoc.set...
-		tableDescriptor.addFamily(famLoc);
-		createOrOverwrite(admin, tableDescriptor);
-		//admin.close();
-	    } catch (Exception e) {}
-	}*/
+        try {
+            final Admin admin = connect.getAdmin(); 
+            HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(TABLE_NAME));
+            HColumnDescriptor famLoc = new HColumnDescriptor(FAMILY); 
+            //famLoc.set...
+            tableDescriptor.addFamily(famLoc);
+            createOrOverwrite(admin, tableDescriptor);
+            admin.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
 	
 	
 	public static Table getTable() throws IOException {
@@ -68,36 +71,22 @@ public class ourHBase {
 		return connection;
 	}
 	
-	public void addRow(String fileName, int y, int x, byte[] img) throws IOException {
+	public void addRow(int y, int x, byte[] img) throws IOException {
 		
-		Put put = new Put(Bytes.toBytes(fileName));
+		String st = new String("x"+x+"y"+y);
+		Put put = new Put(Bytes.toBytes(st));
 		
 		byte[] y_x = {(byte)y,(byte)x};
 		
 	    put.addColumn(FAMILY, Y_X, y_x);
 	    put.addColumn(FAMILY, DATA, img);
 	    getTable().put(put);
-	    
-	    /*try {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		    ImageIO.write( img, "png", baos);
-		    baos.flush();
-		    byte[] imageInByte = baos.toByteArray();
-		    
-		put.addColumn(FAMILY, DATA, img);
-		    
-		    table.put(put);
-		    
-	    }catch(IOException e) {
-	    	e.printStackTrace();
-	    	System.exit(-1);
-	    }*/
 	}
 
 	@Override
 	public int run(String[] args) throws IOException {
-	    //createTable(getConnection());
-	    //table = getTable();
+	    createTable(getConnection());
+	    table = getTable();
 	    return 0;
 	}
     }

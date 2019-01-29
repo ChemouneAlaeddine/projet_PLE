@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -39,8 +38,6 @@ public class Computing {
 			    for (int j = 0; j < SIZE; ++j) {
 			    	
 			    	if(inputStream.read(buffer) < 0) {
-	                    //System.out.println("Error reading file!");
-	                    //System.exit(-1);
 	                    heights[(i*SIZE)+j] = 0;
 	                    continue;
 	                }
@@ -78,6 +75,7 @@ public class Computing {
 	    
 	    return imageInByte;
     }
+    
     
     public static int getColor(int height) {
     	

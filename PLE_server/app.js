@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 4350;
 const HBase = require('hbase-rpc-client');
-const dbName = 'one'
+const dbName = 'one';
 
 client = HBase({
    zookeeperHosts: ['young'],
@@ -16,7 +16,7 @@ app.get('/', function (req, res) {
  res.render('index');
 });
 
-app.get('/frame/:z/:x/:y', function (req, result) {
+app.get('/tile/:z/:x/:y', function (req, result) {
  let x = req.params.x;
  let y = req.params.y;
  let z = 1;
