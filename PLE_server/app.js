@@ -1,10 +1,9 @@
 const express = require('express');
 const app = express();
-const port = 4350;
-const HBase = require('hbase-rpc-client');
-const dbName = 'ourdb';
+const hbase = require('hbase-rpc-client');
 
-client = HBase({
+
+client = hbase({
    zookeeperHosts: ['young'],
    zookeeperRoot: ['/hbase']
   })
@@ -20,11 +19,10 @@ app.get('/tile/:z/:x/:y', function (req, result) {
  let x = req.params.x;
  let y = req.params.y;
  let z = 1;
-
  let pos = "x"+x+"y"+y;
  
-  get = new HBase.Get(pos);
-  const data = client.get(dbName, get,(err, res) => {
+  get = new hbase.Get(pos);
+  const data = client.get('ourdb', get,(err, res) => {
  if (res === null || res === undefined ) {
  result.sendFile(__dirname+"/nothing.png")
  }else{
@@ -36,6 +34,6 @@ app.get('/tile/:z/:x/:y', function (req, result) {
  })
 });
 
-app.listen(port, function () {
- console.log('Listening on port ' + port);
+app.listen(4350, function () {
+ console.log('Listening on port ' + 4350);
 });

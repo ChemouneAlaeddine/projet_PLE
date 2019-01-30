@@ -2,16 +2,20 @@
 <head>
  <meta charset="utf-8">
  <title>OurMap</title>
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
- <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script> 
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="">
+ <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
 </head>
 <html>
 <body>
  <div id="map" style="height: 1200px;"></div>
 </body>
 <script>
- let map = L.map('map').setView([100,0], 6);
- let myLayer = L.tileLayer('http://queen:4350/tile/{z}/{x}/{y}');
+ let map = L.map('map',{
+        minZoom: 4,
+		maxZoom: 10,
+        zoomDelta: 1});
+        map.setView([75, 85], 8);
+ let myLayer = L.tileLayer('http://slash:4350/tile/{z}/{x}/{y}');
  map.addLayer(myLayer);
 </script>
 </html>
