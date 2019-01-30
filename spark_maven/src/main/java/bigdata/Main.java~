@@ -49,7 +49,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		hb = new ourHBase.HBaseProg();
 	    ToolRunner.run(HBaseConfiguration.create(), hb, args);
-		int result = run("hdfs://ripoux:9000/user/raw_data/dem3");
+		int result = run("hdfs://young:9000/user/raw_data/dem3");
 		System.exit(result);
 	}
 }

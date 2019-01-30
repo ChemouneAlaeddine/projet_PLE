@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 4350;
 const HBase = require('hbase-rpc-client');
-const dbName = 'one';
+const dbName = 'ourdb';
 
 client = HBase({
    zookeeperHosts: ['young'],
@@ -21,20 +21,16 @@ app.get('/tile/:z/:x/:y', function (req, result) {
  let y = req.params.y;
  let z = 1;
 
- console.log("coordonnés "+ x +" "+ y+" "+z);
- let index = "zoom" + z + "x" + x +"y"+ y;
+ let pos = "x"+x+"y"+y;
  
-  get = new HBase.Get(index);
+  get = new HBase.Get(pos);
   const data = client.get(dbName, get,(err, res) => {
- //console.log(res.columns[0].value);
  if (res === null || res === undefined ) {
- result.sendFile(__dirname+"/water.png")
- }
- else {
+ result.sendFile(__dirname+"/nothing.png")
+ }else{
  val = res.columns[0].value;
  let data = new Buffer(val, 'base64');
  result.contentType('image/png');
- // result.setHeader('Content-Type', 'image/png');
  result.send(data);
  }
  })

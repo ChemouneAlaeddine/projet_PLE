@@ -20,7 +20,7 @@ import org.apache.hadoop.util.Tool;
 public class ourHBase {
 
     public static class HBaseProg extends Configured implements Tool {
-    private static final byte[] TABLE_NAME = Bytes.toBytes("achemoune_bfaik");
+    private static final byte[] TABLE_NAME = Bytes.toBytes("ourdb");
     private static final byte[] FAMILY = Bytes.toBytes("familyName");
 	
 	private static final byte[] Y_X    = Bytes.toBytes("y_x");
